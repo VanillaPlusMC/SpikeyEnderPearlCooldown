@@ -1,0 +1,5 @@
+#Define the number in seconds between pearl uses.
+delay: 30
+
+#Define the message sent to a player when they cannot use a pearl. (use %s for number of seconds)
+message: '&7You may not use a pearl in this area for %s second(s)'
