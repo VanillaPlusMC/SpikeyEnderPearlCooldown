@@ -87,24 +87,20 @@ public class Main extends JavaPlugin implements Listener {
 
     @EventHandler
     public void pearl(PlayerInteractEvent event) {
-        Bukkit.getLogger().info("event");
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getPlayer().getItemInHand() == null || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) return;
-        Bukkit.getLogger().info("is pearl");
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
 
         for (ProtectedRegion region : set.getRegions()) {
             if (!(region.getFlags().get(pearlFlag) == StateFlag.State.ALLOW)) continue;
-            Bukkit.getLogger().info("region has pearl");
-            if (isOnCooldown(event.getPlayer().getUniqueId())) {
+            if (isOnCooldown(event.getPlayer().getUniqueId()) && !event.getPlayer().hasPermission("enderpearlcooldown.bypass")) {
                 event.setCancelled(true);
                 event.getPlayer().sendMessage(message.formatted(CF.getCoolDownTimeInDays(event.getPlayer().getUniqueId(), 0)));
                 return;
             }
             updateCooldown(event.getPlayer().getUniqueId());
-            Bukkit.getLogger().info("update cooldown");
         }
 
     }
