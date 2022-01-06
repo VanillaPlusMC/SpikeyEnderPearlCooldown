@@ -94,15 +94,20 @@ public class Main extends JavaPlugin implements Listener {
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
 
+        ProtectedRegion highPR = null;
         for (ProtectedRegion region : set.getRegions()) {
-            if (!(region.getFlags().get(pearlFlag) == StateFlag.State.ALLOW)) continue;
-            if (isOnCooldown(event.getPlayer().getUniqueId()) && !event.getPlayer().hasPermission("enderpearlcooldown.bypass")) {
-                event.setCancelled(true);
-                event.getPlayer().sendMessage(message.formatted(CF.getCoolDownTimeInDays(event.getPlayer().getUniqueId(), 0)));
-                return;
-            }
-            updateCooldown(event.getPlayer().getUniqueId());
+            if (highPR == null || region.getPriority() > highPR.getPriority()) highPR = region;
         }
+
+        if (highPR == null) return;
+
+        if (!(highPR.getFlags().get(pearlFlag) == StateFlag.State.ALLOW)) return;
+        if (isOnCooldown(event.getPlayer().getUniqueId()) && !event.getPlayer().hasPermission("enderpearlcooldown.bypass")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(message.formatted(CF.getCoolDownTimeInDays(event.getPlayer().getUniqueId(), 0)));
+            return;
+        }
+        updateCooldown(event.getPlayer().getUniqueId());
 
     }
 
