@@ -89,6 +89,7 @@ public class Main extends JavaPlugin implements Listener {
     public void pearl(PlayerInteractEvent event) {
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getPlayer().getItemInHand() == null || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) return;
+        if (event.getPlayer().getCooldown(Material.ENDER_PEARL) > 0) return;
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
         ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(event.getPlayer().getLocation()));
