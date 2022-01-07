@@ -88,7 +88,13 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void pearl(PlayerInteractEvent event) {
         if (!(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) return;
-        if (event.getPlayer().getItemInHand() == null || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) return;
+        //is main hand not ender pearl
+        if (event.getPlayer().getItemInHand() == null || !event.getPlayer().getInventory().getItemInMainHand().getType().equals(Material.ENDER_PEARL)) {
+            //is off hand not ender pearl
+            if (event.getPlayer().getInventory().getItemInOffHand() == null || !event.getPlayer().getInventory().getItemInOffHand().getType().equals(Material.ENDER_PEARL)) {
+                return;
+            }
+        }
         if (event.getPlayer().getCooldown(Material.ENDER_PEARL) > 0) return;
         RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
         RegionQuery query = container.createQuery();
